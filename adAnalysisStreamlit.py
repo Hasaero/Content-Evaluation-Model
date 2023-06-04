@@ -26,11 +26,27 @@ from urllib.request import urlopen
 import requests
 import os
 
-font_dir = 'https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/BMDOHYEON_ttf.ttf'
-fm.fontManager.addfont(font_dir)
-fm._load_fontmanager(try_read_cache=False)
-plt.rc('font', family='BM Dohyeon')
 
+# font_dir = 'https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/BMDOHYEON_ttf.ttf'
+# fm.fontManager.addfont(font_dir)
+# fm._load_fontmanager(try_read_cache=False)
+# plt.rc('font', family='BM Dohyeon')
+url = 'https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/BMDOHYEON_ttf.ttf'
+response = requests.get(url)
+
+# 현재 디렉토리에 ttf 파일을 저장합니다.
+with open('BMDOHYEON_ttf.ttf', 'wb') as out_file:
+    out_file.write(response.content)
+
+# 이제 파일은 로컬 파일 시스템에 저장되어 있으므로 ft2font.FT2Font에서 사용할 수 있습니다.
+font_path = os.path.abspath('BMDOHYEON_ttf.ttf')
+fm.fontManager.addfont(font_path)
+
+# 위 코드는 캐시된 FontManager를 무시하고 새로운 것을 불러오도록 설정합니다.
+fm._load_fontmanager(try_read_cache=False)
+
+# 이제 'BM Dohyeon' 폰트를 사용할 수 있게 됐습니다.
+plt.rc('font', family='BM Dohyeon')
 #os.chdir('C:\\Users\\7info\\Desktop\\Content_Evaluation')
 # 데이터 로딩
 
