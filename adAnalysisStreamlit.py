@@ -291,7 +291,7 @@ elif page == '광고 영상을 잘 만드려면?':
         st.markdown("<hr>", unsafe_allow_html=True)
         st.subheader("⏱️ 평균 영상 길이는 " + convert_time(mean_time)+ "에요.")
         st.info(f"**전체 영상 평균 길이는 {convert_time(df['duration_min'].mean())}에요.**")
-        
+        st.markdown("<hr>", unsafe_allow_html=True)
         st.subheader(f"💯 영상들의 평균 점수는 {round(genre_df['score'].mean(),2)} 점이에요.")
         st.info(f"**전체 영상 평균 점수는 {round(df['score'].mean(),2)} 점이에요.**")
         st.info(f"**점수 = 영상조회수/채널평균조회수 의 평균**")
