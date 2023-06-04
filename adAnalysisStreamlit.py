@@ -258,10 +258,10 @@ elif page == '이목을 끄는 썸네일!':
             st.markdown("<hr>", unsafe_allow_html=True)
             ### 색깔 정보
             st.subheader(f"🌈 썸네일에서 색상, 명도, 채도를 살펴봐요.")
-            st.subheader(f"🟠썸네일의 색상이 {color_print(color_df, genre_eng, 'color_category')}")
+            #st.subheader(f"🟠썸네일의 색상이 {color_print(color_df, genre_eng, 'color_category')}")
             st.subheader(f"🟡 썸네일의 명도가 {color_print(color_df, genre_eng, 'lightness_category')}")
             st.subheader(f"🟢 썸네일의 채도가 {color_print(color_df, genre_eng, 'saturation_category')}")
-            st.info("**전체 채널의 사분위수 범위로 구분했어요**")
+            st.info("**전체 채널을 사분위수 범위로 구분했어요.**")
             st.markdown("<hr>", unsafe_allow_html=True)
             
             st.subheader(f"✍️ 썸네일에 자주 등장하는 키워드에요.")
