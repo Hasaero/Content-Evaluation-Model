@@ -26,7 +26,7 @@ from urllib.request import urlopen
 import requests
 import os
 
-os.chdir('C:\\Users\\7info\\Desktop\\Content_Evaluation')
+#os.chdir('C:\\Users\\7info\\Desktop\\Content_Evaluation')
 # 데이터 로딩
 
 def plot_wordcloud(df, text_feature, font_path='BMDOHYEON_ttf.ttf'):
@@ -95,7 +95,6 @@ def tokenize(text):
 #         if corruption_word in text:
 #             keep_words.append(corruption_word)
 #             text = text.replace(corruption_word, " ")
-
     # 2307회등 (숫자+명사)된 경우 전체 제거         
     text=remove_digit_and_single_char(text)
     # 정규화 및 어근 추출
@@ -154,17 +153,20 @@ def make_one_str(df, feature):
 
 def color_print(color_df, genre_eng, feature):
     color_value = color_df[color_df['genre'] == genre_eng][feature]
+    color_value = color_value.iloc[0]
     if color_value == "Very High":
         return "매우 높아요"
     elif color_value == "High":
         return "높아요"
     elif color_value == "Medium":
         return "낮아요"
-    elif color_value == "Very High":
+    elif color_value == "Low":
         return "매우 낮아요"  
     
-df = pd.read_csv('good_ad_data.csv')
-#color_df = pd.read_csv('good_ad_color.csv')
+# df = pd.read_csv('good_ad_data.csv')
+# color_df = pd.read_csv('good_ad_color.csv')
+df = pd.read_csv('https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/good_ad_data.csv')
+color_df = pd.read_csv('https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/good_ad_color.csv')
 df['title_token'] = df['title'].apply(tokenize)
 df['thumbnail_text_token'] = df['thumbnail_text'].apply(tokenize)
 # 한글화를 위한 장르 딕셔너리
@@ -206,6 +208,9 @@ if 'genre' not in st.session_state:
 
 page = st.sidebar.selectbox("어떤 특징을 찾으시나요?", ['홈', '어떤 제목이 인기가 많을까?', '이목을 끄는 썸네일!', '광고 영상을 잘 만드려면?'])
 if page == '홈':
+    st.markdown(
+    "*Handong Global University - Big Data Analysis 2023-01*"
+    )
     # # 로고 이미지 로드
     # image = Image.open('logo.jpg')
     # st.image("logo.jpg", width=180)
@@ -216,9 +221,7 @@ if page == '홈':
     # 장르 선택 (한글로 표시)
     genre_kor = st.selectbox('장르를 선택하세요.', [None]+list(genre_dict.keys()))
     st.sidebar.markdown(f"현재 선택된 장르는 **{genre_kor}** 이에요.")
-    st.markdown(
-    "*Handong Global University - Big Data Analysis 2023-01*"
-    )
+    
     # 장르 선택 리스트
     if genre_kor is not None:
         genre_eng = genre_dict[genre_kor]
@@ -270,13 +273,12 @@ elif page == '이목을 끄는 썸네일!':
             st.markdown("<hr>", unsafe_allow_html=True)
             ### 색깔 정보
             st.subheader(f"🌈 썸네일에서 색상, 명도, 채도를 살펴봐요.")
-
-            # for feature in [('색상', 'color_category'), ('명도','lightness_category'), ('채도','saturation_category')]:
-            #     color_info = color_print(color_df, genre_eng, feature)
-            #     st.subheader(f"썸네일의 {feature[0]}이 {color_info}")
-         
-            st.subheader(f"📝 썸네일에서 색깔은 {round(genre_df['thumbnail_text_ratio'].mean()*100)}% 를 차지해요.")
+            st.subheader(f"🟠썸네일의 색상이 {color_print(color_df, genre_eng, 'color_category')}")
+            st.subheader(f"🟡 썸네일의 명도가 {color_print(color_df, genre_eng, 'lightness_category')}")
+            st.subheader(f"🟢 썸네일의 채도가 {color_print(color_df, genre_eng, 'saturation_category')}")
+            st.info("**전체 채널의 사분위수 범위**")
             st.markdown("<hr>", unsafe_allow_html=True)
+            
             st.subheader(f"✍️ 썸네일에 자주 등장하는 키워드에요.")
             freq_words_df = plot_freq_keyword(genre_df, 'thumbnail_text_token') 
             st.subheader("👇 키워드에 대한 점수를 확인해보세요!")
