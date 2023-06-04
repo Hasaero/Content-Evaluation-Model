@@ -26,7 +26,7 @@ from urllib.request import urlopen
 import requests
 import os
 
-font_dir = 'https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/customFonts/BMDOHYEON_ttf.ttf'
+font_dir = 'https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/BMDOHYEON_ttf.ttf'
 fm.fontManager.addfont(font_dir)
 fm._load_fontmanager(try_read_cache=False)
 plt.rc('font', family='BM Dohyeon')
