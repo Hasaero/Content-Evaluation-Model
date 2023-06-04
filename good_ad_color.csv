@@ -1,0 +1,15 @@
+﻿genre,color_category,lightness_category,saturation_category
+Autos & Vehicles,High,Very High,High
+Comedy,Medium,Low,Low
+Education,High,Very High,Very High
+Entertainment,Medium,High,High
+Film & Animation,Low,Low,Low
+Gaming,High,Very High,Very High
+Howto & Style,Very High,Low,Medium
+Music,Very High,Low,Low
+News & Politics,Very High,Very High,Very High
+People & Blogs,Low,Medium,Low
+Pets & Animals,Low,High,Medium
+Science & Technology,Very High,Medium,Very High
+Sports,Medium,Medium,High
+Travel & Events,Low,High,Medium
