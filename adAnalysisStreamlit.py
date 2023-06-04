@@ -10,7 +10,6 @@ import seaborn as sns
 # Text Analysis
 from wordcloud import WordCloud
 from collections import Counter, defaultdict
-from konlpy.tag import Okt
 import re
 
 # Vision
@@ -63,50 +62,6 @@ def calculate_token_scores(df, text_feature):
     return df_token_scores
 
 
-
-def remove_digit_and_single_char(text):
-    cleaned_text = re.sub(r'\d+[가-힣]', '', text)
-    return cleaned_text
-
-# 형태소 분석하여, 제목을 토큰화 하는 함수
-def tokenize(text):
-    if pd.isna(text):
-        return None
-    okt = Okt()
-    stopwords = ['/', '[', ']', '+', '-', '_', '=', '(', ')', '{', '}',
-                 '>', '<', ':', ';', '.', ',', '?', '!', '@', '#', '$',
-                 '%', '^', '&', '*', '...','"', "''"]
-    
-    # 제거해야 하는 지시대명사
-    pronouns = ["이","여기","그", "이", "저", "아무", "무엇", "어디", "언제", "누구", "그거", "이렇게", "때", "얘", "니", "제","네가","거", "이거", "내", "이번", "너", "나", "어느", "것"]
-    # 제거해야 하는 의미없는 단어
-    meaningless = ["좀","데" , "뭐", "듯", "머", "뿐", "하다", "수", "어쩌", "온", "안", "다", "편" "너무", "요", "것", "더", "왜", "는가", "걸", "함",
-                   "은", "이다", "있다", "게", "후", "막", "근데", "딱", "쪽", "과연", "속", "및", "뭘", "당신", "의", "마", "날", "량", "어쩌나", "또",
-                   "이젠", "놈", "세"]
-    # 일반적으로 제거하듯이 고유명사를 제거해야 하나?
-#     proper_nouns =["율지문덕", "엔틱보스","문현빈", "민이네다육", "05학번이즈히어", "웨스트브룩", "서조", "가오나시티", "웰리힐리파크", "터틀비치", "엔틱보스", "만만사단", "피린이", "코-액시얼 마스터 크로노미터 크로노그래프", "수부지", "우드샷", "삼성전자", "앙스타", "롤토체스", "실비집", "가시와다육이마을", "공미", "포토라이", "헤라나스", "태그라크", "세븐나이츠레볼루션", "다육풍경", "젤버스트", "칼리스타", "에리카", "한문철", "찐시황","레이커스", "에스파", "코나", "셀토스", "수삼TV", "쿠네리뷰", "박군", "리뷰대장", "필아이비", "클체", "풀문양", "리리코", "전섭", "세인트릴리", "왕만이형", "봉희악", "부캐릭", "에픽세븐", "삼양", "키나", "꼰보석", "로벅스", "신라젠", "적혈공성선", "용느사조직", "뮨법사","업비트","김톤슨"]    
-    # 쪼갰을 때 의미가 손상되는 단어
-#     corruption_words = ["가성비","방향지시등", "구독자", "웃음벨", "꼰대", "라이징", "토르템","알트코인", "브이로그", "미니멀","일반통행","성장주", "영입", "헬로우", "퀸아망", "신화인형", "재상장", "스펙업", "토르템", "각인템", "수입차", "드림카", "올드카", "축캐릭", "양측", "대항마","찐", "리먼사태", "참가비", "초강력", "포메이션", "리프레쉬", "통모짜", "시음회", "아우터", "데일리룩", "출근룩", "상자깡", "올타임", "갓템", "동호인", "살림템", "데일리", "자율주행", "낄스윗홈", "출조점", "방구석토크","초간단", "비하인드", "백패킹", "클로징벨", "한방", "저점", "자작극", "전세캠", "페이스리프트", "에어프라이어","꾸안꾸", "무과금","리뷰", "꿀조합","콤백홈", "투핸드", "킹피스", "템트리","혼조세", "베어마켓랠리"]
-
-#     # 본격적으로 전처리를 하기전 쪼개지 말아야 하는 단어에 해당하는 단어를 저장하는 리스트
-#     keep_words = []
-#     # 단어를 쪼개기 전 corruption_words에 해당하는 단어들이 문장 내 있으면 추출
-#     for corruption_word in corruption_words:
-#         if corruption_word in text:
-#             keep_words.append(corruption_word)
-#             text = text.replace(corruption_word, " ")
-    # 2307회등 (숫자+명사)된 경우 전체 제거         
-    text=remove_digit_and_single_char(text)
-    # 정규화 및 어근 추출
-    words = okt.pos(text, norm=True, stem=True)  
-    # 품사 태그 선택
-    words = [word for word, pos in words if pos in ['Noun', 'Adjective', 'Verb', 'Adverb']]  # 선택한 품사만 추출
-    # 불용어, 지시대명사, 의미없는 단어, 고유명사 제거
-    words = [word for word in words if word not in stopwords + pronouns + meaningless] 
-    # 최종 단어와 사전에 분리해둔 쪼개지 말아야 하는 단어 리스트를 합한다.
-    # words = words + keep_words
-    
-    return words
 
 def plot_freq_keyword(df, text_feature):
     plt.rc('font', family='Malgun Gothic')
@@ -162,13 +117,21 @@ def color_print(color_df, genre_eng, feature):
         return "낮아요"
     elif color_value == "Low":
         return "매우 낮아요"  
+
+def convert_to_list(val):
+    try:
+        return literal_eval(val)
+    except (ValueError, SyntaxError):
+        return None  # or whatever you want to return for invalid values
     
 # df = pd.read_csv('good_ad_data.csv')
 # color_df = pd.read_csv('good_ad_color.csv')
 df = pd.read_csv('https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/good_ad_data.csv')
+df['title_token'] = df['title_token'].apply(convert_to_list)
+df['thumbnail_text_token'] = df['thumbnail_text_token'].apply(convert_to_list)
+
 color_df = pd.read_csv('https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/good_ad_color.csv')
-df['title_token'] = df['title'].apply(tokenize)
-df['thumbnail_text_token'] = df['thumbnail_text'].apply(tokenize)
+
 # 한글화를 위한 장르 딕셔너리
 genre_dict = {
 #'동물': 'Pets & Animals',

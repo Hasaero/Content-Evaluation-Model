@@ -1,0 +1,6 @@
+streamlit
+pandas
+numpy
+matplotlib == 3.4.3
+seaborn
+wordcloud
