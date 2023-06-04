@@ -5,6 +5,7 @@ import numpy as np
 from ast import literal_eval
 # Visualization
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import seaborn as sns
 
 # Text Analysis
@@ -25,11 +26,16 @@ from urllib.request import urlopen
 import requests
 import os
 
+font_dir = 'https://raw.githubusercontent.com/Hasaero/Content-Evaluation-Model/master/customFonts/BMDOHYEON_ttf.ttf'
+fm.fontManager.addfont(font_dir)
+fm._load_fontmanager(try_read_cache=False)
+plt.rc('font', family='BM Dohyeon')
+
 #os.chdir('C:\\Users\\7info\\Desktop\\Content_Evaluation')
 # 데이터 로딩
 
-def plot_wordcloud(df, text_feature, font_path='BMDOHYEON_ttf.ttf'):
-    plt.rc('font', family='Malgun Gothic')
+def plot_wordcloud(df, text_feature, font_path=font_dir):
+    
     new_df = df.dropna(subset=[text_feature])
     text = ' '.join(new_df[text_feature])
     wordcloud = WordCloud(width=1200, height=800, background_color='white', font_path=font_path).generate(text)
@@ -64,7 +70,7 @@ def calculate_token_scores(df, text_feature):
 
 
 def plot_freq_keyword(df, text_feature):
-    plt.rc('font', family='Malgun Gothic')
+    
     new_df = df.dropna(subset=[text_feature])
     df_token_scores = calculate_token_scores(new_df, text_feature)
     df_token_scores.set_index('Token', inplace=True)
@@ -251,7 +257,7 @@ elif page == '이목을 끄는 썸네일!':
             
             st.markdown("<hr>", unsafe_allow_html=True)
             st.subheader("📷 썸네일에서 탐지된 객체들을 보여드릴게요.")
-            wordcloud = WordCloud(width=1200, height=800, background_color='white', font_path='BMDOHYEON_ttf.ttf').generate(all_tags_str)
+            wordcloud = WordCloud(width=1200, height=800, background_color='white', font_path=font_dir).generate(all_tags_str)
             plt.figure(figsize=(8, 8))
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
