@@ -50,7 +50,7 @@ plt.rc('font', family='BM Dohyeon')
 #os.chdir('C:\\Users\\7info\\Desktop\\Content_Evaluation')
 # 데이터 로딩
 
-def plot_wordcloud(df, text_feature, font_path=font_dir):
+def plot_wordcloud(df, text_feature, font_path=url):
     
     new_df = df.dropna(subset=[text_feature])
     text = ' '.join(new_df[text_feature])
@@ -273,7 +273,7 @@ elif page == '이목을 끄는 썸네일!':
             
             st.markdown("<hr>", unsafe_allow_html=True)
             st.subheader("📷 썸네일에서 탐지된 객체들을 보여드릴게요.")
-            wordcloud = WordCloud(width=1200, height=800, background_color='white', font_path=font_dir).generate(all_tags_str)
+            wordcloud = WordCloud(width=1200, height=800, background_color='white', font_path=url).generate(all_tags_str)
             plt.figure(figsize=(8, 8))
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
